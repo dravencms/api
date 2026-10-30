@@ -1,0 +1,34 @@
+{block content}
+<p><a n:href="default, clientId: $client->getId()"><i class="fa fa-arrow-left" aria-hidden="true"></i> Tokens: {$client->getName()}</a></p>
+{if $issuedToken}
+    <div class="alert alert-warning" role="status">
+        <strong>New token (shown once):</strong> <code>{$issuedToken}</code>
+    </div>
+{else}
+    <form n:name="tokenForm" class="panel form-horizontal">
+        <ul class="alert alert-danger" n:if="$form->hasErrors()">
+            <li n:foreach="$form->errors as $error">{$error}</li>
+        </ul>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group no-margin-hr">
+                        <label n:name="name" class="control-label">Token name <span class="text-danger">*</span></label>
+                        <input n:name="name" class="form-control" autofocus>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group no-margin-hr">
+                        <label n:name="expires" class="control-label">Expires (UTC)</label>
+                        <input n:name="expires" type="date" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button n:name="issue" class="btn btn-success button"><i class="fa fa-plus" aria-hidden="true"></i> Create token</button>
+            <a n:href="default, clientId: $client->getId()" class="btn btn-default">Cancel</a>
+        </div>
+    </form>
+{/if}
+{/block}

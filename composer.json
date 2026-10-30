@@ -1,0 +1,39 @@
+{
+  "name": "dravencms/api",
+  "description": "Modular read-only REST API for DravenCMS, powered by Apitte",
+  "type": "dravencms-package",
+  "license": "LGPL-3.0-only",
+  "authors": [
+    {
+      "name": "Adam Schubert"
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "ext-json": "*",
+    "contributte/apitte": "^0.14",
+    "contributte/openapi": "^0.1",
+    "dravencms/application": "^0.1 || ^0.2",
+    "dravencms/database": "^0.2",
+    "nette/caching": "^3.1",
+    "symfony/console": "^6.4 || ^7.0 || ^8.0",
+    "symfony/rate-limiter": "^6.4 || ^7.0 || ^8.0",
+    "symfony/cache": "^6.4 || ^7.0 || ^8.0",
+    "symfony/lock": "^6.4 || ^7.0 || ^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Dravencms\\Api\\": "src/Dravencms/Api/",
+      "Dravencms\\AdminModule\\ApiModule\\": "src/Dravencms/AdminModule/ApiModule/",
+      "Dravencms\\Model\\Api\\": "src/Dravencms/Model/Api/"
+    }
+  },
+  "suggest": {
+    "dravencms/admin": "Optional client and token management through the DravenCMS admin interface"
+  },
+  "extra": {
+    "dravencms": {
+      "configuration": "dravencms.config.neon"
+    }
+  }
+}
