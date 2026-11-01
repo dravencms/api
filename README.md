@@ -72,11 +72,13 @@ permission and CSRF protection. Revoked tokens remain in the list as history.
 
 List the scopes exposed by installed controllers and create an integration:
 
+Resource scopes and URLs below assume the example article controller is registered;
+replace them with resources provided by your installed packages.
+
 ```sh
 php bin/console api:scopes
 php bin/console api:client:create "Partner integration" \
-    --scope=sklub.events:read \
-    --scope=sklub.event_categories:read \
+    --scope=article.articles:read \
     --scope=api.documentation:read \
     --limit=60
 php bin/console api:token:create 1 "Production" \
@@ -88,7 +90,7 @@ database. Expiry is optional. Use the token in the HTTP header:
 
 ```sh
 curl -H "Authorization: Bearer $API_TOKEN" \
-    'https://example.com/api/v1/events?is_active=false&limit=20'
+    'https://example.com/api/v1/articles?limit=20'
 ```
 
 The web server must pass the `Authorization` header to PHP. Use HTTPS in production.
@@ -202,12 +204,9 @@ Unauthenticated traffic should be limited at the web server or proxy.
 
 ## Verification
 
-From the S-Klub application checkout, its integration suite exercises real Apitte dispatch, Doctrine queries on
-an isolated SQLite database, token/scopes/rate-limit behavior, admin templates,
-form defaults, and repeatable setup:
+Run integration checks in the consuming application against an isolated test
+database. Cover Apitte dispatch, resource queries and visibility rules, token
+expiry and revocation, scope enforcement, pagination, rate limits, admin forms,
+and repeatable setup. Verify Swagger UI with the application's generated schema.
 
-```sh
-php tests/ApiTest.php
-```
-
-The suite does not connect to the project's configured database.
+The package does not currently include a standalone test suite.
