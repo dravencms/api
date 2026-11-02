@@ -67,9 +67,9 @@ final class ClientPresenter extends SecuredPresenter
         $grid->addColumnDateTime('createdAt', 'Created')->setFormat($this->currentLocaleResolver->getCurrentLocale()->getDateTimeFormat())
             ->setSortable()->setFilterDate();
         $grid->addAction('edit', '', 'edit')->setIcon('pencil')->setTitle('Edit')
-            ->setClass('btn btn-xs btn-primary');
+            ->setClass('btn btn-sm btn-primary');
         $grid->addAction('tokens', '', 'Token:default', ['clientId' => 'id'])->setIcon('key')->setTitle('Tokens')
-            ->setClass('btn btn-xs btn-primary');
+            ->setClass('btn btn-sm btn-primary');
         return $grid;
     }
 

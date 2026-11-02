@@ -1,15 +1,15 @@
 {block content}
 <p><a n:href="default, clientId: $client->getId()"><i class="fa fa-arrow-left" aria-hidden="true"></i> Tokens: {$client->getName()}</a></p>
-<form n:name="revokeForm" class="panel form-horizontal">
+<form n:name="revokeForm" class="card">
     <ul class="alert alert-danger" n:if="$form->hasErrors()">
         <li n:foreach="$form->errors as $error">{$error}</li>
     </ul>
-    <div class="panel-body">
+    <div class="card-body">
         <p>Revoke token <strong>{$token->getName()}</strong>?</p>
     </div>
-    <div class="panel-footer">
+    <div class="card-footer">
         <button n:name="revoke" class="btn btn-danger button"><i class="fa fa-trash" aria-hidden="true"></i> Revoke token</button>
-        <a n:href="default, clientId: $client->getId()" class="btn btn-default">Cancel</a>
+        <a n:href="default, clientId: $client->getId()" class="btn btn-outline-secondary">Cancel</a>
     </div>
 </form>
 {/block}

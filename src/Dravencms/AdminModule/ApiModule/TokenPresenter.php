@@ -89,7 +89,7 @@ final class TokenPresenter extends SecuredPresenter
                 ->setSortable()->setFilterDate();
         }
         $grid->addAction('delete', '', 'delete', ['clientId' => 'client.id', 'id' => 'id'])
-            ->setIcon('trash')->setTitle('Revoke token')->setClass('btn btn-xs btn-danger');
+            ->setIcon('trash')->setTitle('Revoke token')->setClass('btn btn-sm btn-danger');
         $grid->allowRowsAction('delete', static fn(ApiToken $token): bool => $token->getRevokedAt() === null);
         return $grid;
     }
