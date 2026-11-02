@@ -1,5 +1,5 @@
 {block content}
-<p><a n:href="default"><i class="fa fa-arrow-left" aria-hidden="true"></i> API clients</a></p>
+<p><a n:href="default"><i class="fa fa-arrow-left" aria-hidden="true"></i> {_'api.admin.title.clients'}</a></p>
 <form n:name="clientForm" class="card">
     <ul class="alert alert-danger" n:if="$form->hasErrors()">
         <li n:foreach="$form->errors as $error">{$error}</li>
@@ -8,13 +8,13 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="mb-3">
-                    <label n:name="name" class="form-label">Name <span class="text-danger">*</span></label>
+                    <label n:name="name" class="form-label">{_'api.admin.field.name'} <span class="text-danger">*</span></label>
                     <input n:name="name" class="form-control" autofocus>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="mb-3">
-                    <label n:name="limit" class="form-label">Requests per minute <span class="text-danger">*</span></label>
+                    <label n:name="limit" class="form-label">{_'api.admin.field.limit'} <span class="text-danger">*</span></label>
                     <input n:name="limit" class="form-control" min="1" max="100000">
                 </div>
             </div>
@@ -22,13 +22,13 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="mb-3">
-                    <label class="form-label">Scopes</label>
+                    <label class="form-label">{_'api.admin.field.scopes'}</label>
                     <div class="form-check" n:foreach="$form['scopes']->getItems() as $scope => $label">
                         <label><input n:name="scopes:$scope" class="form-check-input"> <span class="form-check-label">{$label}</span></label>
                     </div>
                 </div>
                 <div class="form-check">
-                    <label><input n:name="is_active" class="form-check-input"> <span class="form-check-label">Active</span></label>
+                    <label><input n:name="is_active" class="form-check-input"> <span class="form-check-label">{_'api.admin.field.active'}</span></label>
                 </div>
             </div>
         </div>

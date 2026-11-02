@@ -30,7 +30,7 @@ final class ClientPresenter extends SecuredPresenter
     public function actionDefault(): void
     {
         $this->getHttpResponse()->setHeader('Cache-Control', 'private, no-store');
-        $this->template->h1 = 'API clients';
+        $this->template->h1 = $this->translator->translate('api.admin.title.clients');
         $this->template->setFile(__DIR__ . '/templates/default.latte');
     }
 
@@ -44,7 +44,7 @@ final class ClientPresenter extends SecuredPresenter
                 $this->error();
             }
         }
-        $this->template->h1 = $this->client ? 'API client: ' . $this->client->getName() : 'New API client';
+        $this->template->h1 = $this->translator->translate($this->client ? 'api.admin.title.editClient' : 'api.admin.title.newClient', ['name' => $this->client?->getName()]);
         $this->template->setFile(__DIR__ . '/templates/edit.latte');
     }
 
@@ -59,16 +59,17 @@ final class ClientPresenter extends SecuredPresenter
         $grid = $this->baseGridFactory->create($this, $name);
         $grid->setDataSource($this->entityManager->createQueryBuilder()->select('c')->from(ApiClient::class, 'c'));
         $grid->setDefaultSort(['id' => 'DESC']);
-        $grid->addColumnNumber('id', 'ID')->setSortable()->setFilterRange();
-        $grid->addColumnText('name', 'Name')->setSortable()->setFilterText();
-        $grid->addColumnBoolean('isActive', 'Active')->setFilterSelect(['' => 'All', 1 => 'Yes', 0 => 'No']);
-        $grid->addColumnNumber('requestsPerMinute', 'Requests per minute')->setSortable()->setAlign('center')->setFilterRange();
-        $grid->addColumnText('scopes', 'Scopes')->setRenderer(static fn(ApiClient $client): string => implode(', ', $client->getScopes()));
-        $grid->addColumnDateTime('createdAt', 'Created')->setFormat($this->currentLocaleResolver->getCurrentLocale()->getDateTimeFormat())
+        $grid->addColumnNumber('id', 'api.admin.field.id')->setSortable()->setFilterRange();
+        $grid->addColumnText('name', 'api.admin.field.name')->setSortable()->setFilterText();
+        $grid->addColumnBoolean('isActive', 'api.admin.field.active')
+            ->setFilterSelect(['' => 'api.admin.action.all', 1 => 'api.admin.action.yes', 0 => 'api.admin.action.no'])->setTranslateOptions();
+        $grid->addColumnNumber('requestsPerMinute', 'api.admin.field.limit')->setSortable()->setAlign('center')->setFilterRange();
+        $grid->addColumnText('scopes', 'api.admin.field.scopes')->setRenderer(static fn(ApiClient $client): string => implode(', ', $client->getScopes()));
+        $grid->addColumnDateTime('createdAt', 'api.admin.field.created')->setFormat($this->currentLocaleResolver->getCurrentLocale()->getDateTimeFormat())
             ->setSortable()->setFilterDate();
-        $grid->addAction('edit', '', 'edit')->setIcon('pencil')->setTitle('Edit')
+        $grid->addAction('edit', '', 'edit')->setIcon('pencil')->setTitle('api.admin.action.edit')
             ->setClass('btn btn-sm btn-primary');
-        $grid->addAction('tokens', '', 'Token:default', ['clientId' => 'id'])->setIcon('key')->setTitle('Tokens')
+        $grid->addAction('tokens', '', 'Token:default', ['clientId' => 'id'])->setIcon('key')->setTitle('api.admin.action.tokens')
             ->setClass('btn btn-sm btn-primary');
         return $grid;
     }
@@ -76,15 +77,18 @@ final class ClientPresenter extends SecuredPresenter
     protected function createComponentClientForm(): Form
     {
         $form = $this->baseFormFactory->create();
-        $form->addText('name', 'Name')->setRequired()->addRule(Form::MaxLength, null, 190);
+        $form->addText('name', 'api.admin.field.name')->setRequired('api.admin.validation.nameRequired')->addRule(Form::MaxLength, 'api.admin.validation.nameTooLong', 190);
         $available = $this->scopeRegistry->getAll();
         foreach ($this->client?->getScopes() ?? [] as $scope) {
-            $available[$scope] ??= $scope . ' (unavailable)';
+            $available[$scope] ??= $this->translator->translate('api.admin.scope.unavailable', ['scope' => $scope]);
         }
-        $form->addCheckboxList('scopes', 'Scopes', $available);
-        $form->addCheckbox('is_active', 'Active');
-        $form->addInteger('limit', 'Requests per minute')->setRequired()->addRule(Form::Range, null, [1, 100000]);
-        $form->addSubmit('save', 'Save');
+        $form->addCheckboxList('scopes', 'api.admin.field.scopes', $available);
+        $form->addCheckbox('is_active', 'api.admin.field.active');
+        $form->addText('limit', 'api.admin.field.limit')->setHtmlType('number')
+            ->setRequired('api.admin.validation.limitRequired')
+            ->addRule(Form::Integer, 'api.admin.validation.limitInteger')
+            ->addRule(Form::Range, 'api.admin.validation.limitRange', [1, 100000]);
+        $form->addSubmit('save', 'api.admin.action.save');
         $form->setDefaults([
             'name' => $this->client?->getName(),
             'scopes' => $this->client?->getScopes() ?? [],
@@ -94,13 +98,13 @@ final class ClientPresenter extends SecuredPresenter
         $form->onSuccess[] = function (Form $form, \stdClass $values): void {
             $existing = $this->entityManager->getRepository(ApiClient::class)->findOneBy(['name' => trim($values->name)]);
             if ($existing && $existing !== $this->client) {
-                $form['name']->addError('A client with this name already exists.');
+                $form['name']->addError('api.admin.validation.clientTaken');
                 return;
             }
             try {
                 $client = $this->clientManager->saveClient($this->client, $values->name, $values->scopes, $values->is_active, $values->limit);
             } catch (\InvalidArgumentException $error) {
-                $form->addError($error->getMessage());
+                $form->addError('api.admin.validation.clientInvalid');
                 return;
             }
             $this->redirect('edit', ['id' => $client->getId()]);

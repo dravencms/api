@@ -1,15 +1,15 @@
 {block content}
-<p><a n:href="default, clientId: $client->getId()"><i class="fa fa-arrow-left" aria-hidden="true"></i> Tokens: {$client->getName()}</a></p>
+<p><a n:href="default, clientId: $client->getId()"><i class="fa fa-arrow-left" aria-hidden="true"></i> {_'api.admin.title.backTokens', ['name' => $client->getName()]}</a></p>
 <form n:name="revokeForm" class="card">
     <ul class="alert alert-danger" n:if="$form->hasErrors()">
         <li n:foreach="$form->errors as $error">{$error}</li>
     </ul>
     <div class="card-body">
-        <p>Revoke token <strong>{$token->getName()}</strong>?</p>
+        <p>{_'api.admin.token.confirmRevoke', ['name' => $token->getName()]}</p>
     </div>
     <div class="card-footer">
-        <button n:name="revoke" class="btn btn-danger button"><i class="fa fa-trash" aria-hidden="true"></i> Revoke token</button>
-        <a n:href="default, clientId: $client->getId()" class="btn btn-outline-secondary">Cancel</a>
+        <button n:name="revoke" class="btn btn-danger button"><i class="fa fa-trash" aria-hidden="true"></i> {_'api.admin.action.revoke'}</button>
+        <a n:href="default, clientId: $client->getId()" class="btn btn-outline-secondary">{_'api.admin.action.cancel'}</a>
     </div>
 </form>
 {/block}

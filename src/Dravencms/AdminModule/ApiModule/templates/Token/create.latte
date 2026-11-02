@@ -1,8 +1,8 @@
 {block content}
-<p><a n:href="default, clientId: $client->getId()"><i class="fa fa-arrow-left" aria-hidden="true"></i> Tokens: {$client->getName()}</a></p>
+<p><a n:href="default, clientId: $client->getId()"><i class="fa fa-arrow-left" aria-hidden="true"></i> {_'api.admin.title.backTokens', ['name' => $client->getName()]}</a></p>
 {if $issuedToken}
     <div class="alert alert-warning" role="status">
-        <strong>New token (shown once):</strong> <code>{$issuedToken}</code>
+        <strong>{_'api.admin.token.shownOnce'}</strong> <code>{$issuedToken}</code>
     </div>
 {else}
     <form n:name="tokenForm" class="card">
@@ -13,21 +13,21 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="mb-3">
-                        <label n:name="name" class="form-label">Token name <span class="text-danger">*</span></label>
+                        <label n:name="name" class="form-label">{_'api.admin.field.tokenName'} <span class="text-danger">*</span></label>
                         <input n:name="name" class="form-control" autofocus>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="mb-3">
-                        <label n:name="expires" class="form-label">Expires (UTC)</label>
+                        <label n:name="expires" class="form-label">{_'api.admin.field.expiresUtc'}</label>
                         <input n:name="expires" type="date" class="form-control">
                     </div>
                 </div>
             </div>
         </div>
         <div class="card-footer">
-            <button n:name="issue" class="btn btn-success button"><i class="fa fa-plus" aria-hidden="true"></i> Create token</button>
-            <a n:href="default, clientId: $client->getId()" class="btn btn-outline-secondary">Cancel</a>
+            <button n:name="issue" class="btn btn-success button"><i class="fa fa-plus" aria-hidden="true"></i> {_'api.admin.action.issue'}</button>
+            <a n:href="default, clientId: $client->getId()" class="btn btn-outline-secondary">{_'api.admin.action.cancel'}</a>
         </div>
     </form>
 {/if}

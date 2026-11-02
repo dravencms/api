@@ -1,0 +1,57 @@
+admin:
+	field:
+		id: ID
+		name: Název
+		active: Aktivní
+		limit: Požadavků za minutu
+		scopes: Oprávnění API
+		created: Vytvořeno
+		expires: Platnost do
+		revoked: Zneplatněno
+		tokenName: Název tokenu
+		expiresUtc: 'Platnost do (UTC)'
+
+	action:
+		all: Vše
+		'yes': Ano
+		'no': Ne
+		edit: Upravit
+		tokens: Tokeny
+		save: Uložit
+		cancel: Zrušit
+		newClient: Nový klient
+		newToken: Nový token
+		issue: Vytvořit token
+		revoke: Zneplatnit token
+		documentation: Dokumentace API
+
+	title:
+		clients: Klienti API
+		newClient: Nový klient API
+		editClient: 'Klient API: %name%'
+		tokens: 'Tokeny API: %name%'
+		newToken: 'Nový token API: %name%'
+		revokeToken: 'Zneplatnit token API: %name%'
+		backTokens: 'Tokeny: %name%'
+
+	validation:
+		nameRequired: Zadejte název klienta.
+		tokenNameRequired: Zadejte název tokenu.
+		nameTooLong: Název smí mít nejvýše %d znaků.
+		limitRequired: Zadejte počet požadavků za minutu.
+		limitInteger: Počet požadavků musí být celé číslo.
+		limitRange: Počet požadavků musí být od %d do %d.
+		clientTaken: Klient s tímto názvem již existuje.
+		clientInvalid: 'Neplatný název klienta, oprávnění nebo limit požadavků (1–100000).'
+		expiryFormat: Zadejte datum konce platnosti ve formátu RRRR-MM-DD.
+		expiryFuture: Konec platnosti tokenu musí být v budoucnosti.
+		tokenInvalid: Neplatný název tokenu.
+
+	scope:
+		unavailable: '%scope% (nedostupné)'
+
+	token:
+		shownOnce: 'Nový token (zobrazen pouze jednou):'
+		confirmRevoke: Zneplatnit token „%name%“?
+		revoked: Token API byl zneplatněn.
+

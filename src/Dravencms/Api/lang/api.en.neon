@@ -1,0 +1,57 @@
+admin:
+	field:
+		id: ID
+		name: Name
+		active: Active
+		limit: Requests per minute
+		scopes: Scopes
+		created: Created
+		expires: Expires
+		revoked: Revoked
+		tokenName: Token name
+		expiresUtc: 'Expires (UTC)'
+
+	action:
+		all: All
+		'yes': 'Yes'
+		'no': 'No'
+		edit: Edit
+		tokens: Tokens
+		save: Save
+		cancel: Cancel
+		newClient: New client
+		newToken: New token
+		issue: Create token
+		revoke: Revoke token
+		documentation: API documentation
+
+	title:
+		clients: API clients
+		newClient: New API client
+		editClient: 'API client: %name%'
+		tokens: 'API tokens: %name%'
+		newToken: 'New API token: %name%'
+		revokeToken: 'Revoke API token: %name%'
+		backTokens: 'Tokens: %name%'
+
+	validation:
+		nameRequired: Please enter a client name.
+		tokenNameRequired: Please enter a token name.
+		nameTooLong: The name must contain at most %d characters.
+		limitRequired: Please enter the requests per minute.
+		limitInteger: The request limit must be an integer.
+		limitRange: The request limit must be between %d and %d.
+		clientTaken: A client with this name already exists.
+		clientInvalid: 'Invalid client name, scopes, or request limit (1–100000).'
+		expiryFormat: Enter an expiry date in YYYY-MM-DD format.
+		expiryFuture: Token expiry must be in the future.
+		tokenInvalid: Invalid token name.
+
+	scope:
+		unavailable: '%scope% (unavailable)'
+
+	token:
+		shownOnce: 'New token (shown once):'
+		confirmRevoke: Revoke token "%name%"?
+		revoked: API token has been revoked.
+

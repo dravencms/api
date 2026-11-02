@@ -30,7 +30,7 @@ final class TokenPresenter extends SecuredPresenter
     public function actionDefault(int $clientId): void
     {
         $this->loadClient($clientId);
-        $this->template->h1 = 'API tokens: ' . $this->client->getName();
+        $this->template->h1 = $this->translator->translate('api.admin.title.tokens', ['name' => $this->client->getName()]);
         $this->template->setFile(__DIR__ . '/templates/Token/default.latte');
     }
 
@@ -38,7 +38,7 @@ final class TokenPresenter extends SecuredPresenter
     public function actionCreate(int $clientId): void
     {
         $this->loadClient($clientId);
-        $this->template->h1 = 'New API token: ' . $this->client->getName();
+        $this->template->h1 = $this->translator->translate('api.admin.title.newToken', ['name' => $this->client->getName()]);
         $this->template->setFile(__DIR__ . '/templates/Token/create.latte');
     }
 
@@ -52,7 +52,7 @@ final class TokenPresenter extends SecuredPresenter
         if (!$this->token) {
             $this->error();
         }
-        $this->template->h1 = 'Revoke API token: ' . $this->token->getName();
+        $this->template->h1 = $this->translator->translate('api.admin.title.revokeToken', ['name' => $this->token->getName()]);
         $this->template->setFile(__DIR__ . '/templates/Token/delete.latte');
     }
 
@@ -82,14 +82,14 @@ final class TokenPresenter extends SecuredPresenter
         $grid->setDataSource($this->entityManager->createQueryBuilder()->select('t')->from(ApiToken::class, 't')
             ->where('t.client = :client')->setParameter('client', $this->client));
         $grid->setDefaultSort(['id' => 'DESC']);
-        $grid->addColumnNumber('id', 'ID')->setSortable()->setFilterRange();
-        $grid->addColumnText('name', 'Name')->setSortable()->setFilterText();
-        foreach (['createdAt' => 'Created', 'expiresAt' => 'Expires', 'revokedAt' => 'Revoked'] as $field => $label) {
+        $grid->addColumnNumber('id', 'api.admin.field.id')->setSortable()->setFilterRange();
+        $grid->addColumnText('name', 'api.admin.field.name')->setSortable()->setFilterText();
+        foreach (['createdAt' => 'api.admin.field.created', 'expiresAt' => 'api.admin.field.expires', 'revokedAt' => 'api.admin.field.revoked'] as $field => $label) {
             $grid->addColumnDateTime($field, $label)->setFormat($this->currentLocaleResolver->getCurrentLocale()->getDateTimeFormat())
                 ->setSortable()->setFilterDate();
         }
         $grid->addAction('delete', '', 'delete', ['clientId' => 'client.id', 'id' => 'id'])
-            ->setIcon('trash')->setTitle('Revoke token')->setClass('btn btn-sm btn-danger');
+            ->setIcon('trash')->setTitle('api.admin.action.revoke')->setClass('btn btn-sm btn-danger');
         $grid->allowRowsAction('delete', static fn(ApiToken $token): bool => $token->getRevokedAt() === null);
         return $grid;
     }
@@ -100,19 +100,23 @@ final class TokenPresenter extends SecuredPresenter
             $this->error();
         }
         $form = $this->baseFormFactory->create();
-        $form->addText('name', 'Token name')->setRequired()->addRule(Form::MaxLength, null, 190);
-        $form->addText('expires', 'Expires (YYYY-MM-DD, UTC)')->setNullable();
-        $form->addSubmit('issue', 'Create token');
+        $form->addText('name', 'api.admin.field.tokenName')->setRequired('api.admin.validation.tokenNameRequired')->addRule(Form::MaxLength, 'api.admin.validation.nameTooLong', 190);
+        $form->addText('expires', 'api.admin.field.expiresUtc')->setNullable();
+        $form->addSubmit('issue', 'api.admin.action.issue');
         $form->onSuccess[] = function (Form $form, \stdClass $values): void {
             $expires = $values->expires !== null ? \DateTimeImmutable::createFromFormat('!Y-m-d', $values->expires, new \DateTimeZone('UTC')) : null;
             if ($values->expires !== null && (!$expires || $expires->format('Y-m-d') !== $values->expires)) {
-                $form->addError('Enter an expiry date in YYYY-MM-DD format.');
+                $form->addError('api.admin.validation.expiryFormat');
+                return;
+            }
+            if ($expires !== null && $expires <= new \DateTimeImmutable()) {
+                $form->addError('api.admin.validation.expiryFuture');
                 return;
             }
             try {
                 $this->issuedToken = $this->clientManager->issueToken($this->client, $values->name, $expires);
             } catch (\InvalidArgumentException $error) {
-                $form->addError($error->getMessage());
+                $form->addError('api.admin.validation.tokenInvalid');
             }
         };
         return $form;
@@ -124,10 +128,10 @@ final class TokenPresenter extends SecuredPresenter
             $this->error();
         }
         $form = $this->baseFormFactory->create();
-        $form->addSubmit('revoke', 'Revoke token');
+        $form->addSubmit('revoke', 'api.admin.action.revoke');
         $form->onSuccess[] = function (): void {
             $this->clientManager->revokeToken($this->token);
-            $this->flashMessage('API token has been revoked.', 'alert-success');
+            $this->flashMessage($this->translator->translate('api.admin.token.revoked'), 'alert-success');
             $this->redirect('default', ['clientId' => $this->client->getId()]);
         };
         return $form;

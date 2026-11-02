@@ -30,6 +30,12 @@ final class ApiExtension extends CompilerExtension
 
     public function loadConfiguration(): void
     {
+        // Translation is optional for API-only installations without administration.
+        foreach ($this->compiler->getExtensions(\Contributte\Translation\DI\TranslationExtension::class) as $extension) {
+            $config = $extension->getConfig();
+            $config['dirs'][] = __DIR__ . '/../lang';
+            $extension->setConfig($config);
+        }
         $builder = $this->getContainerBuilder();
         foreach ([ScopeRegistry::class, TokenAuthenticator::class, ClientManager::class, OpenApiController::class, ApiPresenter::class, DocumentationPresenter::class] as $class) {
             $builder->addDefinition($this->prefix(str_replace('\\', '.', $class)))->setFactory($class);
