@@ -210,3 +210,5 @@ expiry and revocation, scope enforcement, pagination, rate limits, admin forms,
 and repeatable setup. Verify Swagger UI with the application's generated schema.
 
 The package does not currently include a standalone test suite.
+
+API administration declares `api.clientsEdit` through its ACL provider when the User extension is enabled. The optional `api:admin:install` command assigns that known permission through the grant store; it no longer defines permissions or writes labels to ACL tables. Existing installations upgrading to User 3 must run `user:acl:migrate --apply` before using administration.

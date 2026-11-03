@@ -58,3 +58,10 @@ admin:
 
 menu:
     clients: 'API klienti'
+
+acl:
+    resource: 'API'
+    permissions:
+        clientsEdit:
+            label: 'Spravovat API klienty a tokeny'
+            description: 'Vytváření klientů, omezení jejich rozsahů a vydávání či rušení API tokenů.'

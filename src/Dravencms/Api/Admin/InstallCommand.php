@@ -3,14 +3,15 @@
 namespace Dravencms\Api\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Dravencms\Model\User\Entities\{AclOperation, AclResource, Group};
+use Dravencms\Model\User\Entities\Group;
+use Dravencms\User\Acl\AclGrantStore;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\{InputInterface, InputOption};
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class InstallCommand extends Command
 {
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager, private AclGrantStore $grants)
     {
         parent::__construct('api:admin:install');
     }
@@ -28,20 +29,7 @@ final class InstallCommand extends Command
         if (!$group instanceof Group) {
             throw new \InvalidArgumentException('Administrator group not found; specify --group.');
         }
-        $manager->wrapInTransaction(function () use ($manager, $group): void {
-            $resource = $manager->getRepository(AclResource::class)->findOneBy(['name' => 'api']);
-            if (!$resource) {
-                $resource = new AclResource('api', 'API access management');
-                $manager->persist($resource);
-                $manager->flush();
-            }
-            $operation = $manager->getRepository(AclOperation::class)->findOneBy(['aclResource' => $resource, 'name' => 'clientsEdit']);
-            if (!$operation) {
-                $operation = new AclOperation($resource, 'clientsEdit', 'Manage API clients, scopes and tokens');
-                $manager->persist($operation);
-            }
-            $operation->addGroup($group);
-        });
+        $this->grants->assign($group, array_values(array_unique([...$this->grants->getExplicitKeys($group), 'api.clientsEdit'])));
         $output->writeln('API management permission installed.');
         return Command::SUCCESS;
     }

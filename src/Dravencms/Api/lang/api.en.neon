@@ -58,3 +58,10 @@ admin:
 
 menu:
     clients: 'API clients'
+
+acl:
+    resource: 'API'
+    permissions:
+        clientsEdit:
+            label: 'Manage API clients and tokens'
+            description: 'Create clients, restrict their scopes, and issue or revoke API tokens.'
