@@ -55,3 +55,6 @@ admin:
 		confirmRevoke: Revoke token "%name%"?
 		revoked: API token has been revoked.
 
+
+menu:
+    clients: 'API clients'

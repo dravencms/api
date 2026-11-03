@@ -55,3 +55,6 @@ admin:
 		confirmRevoke: Zneplatnit token „%name%“?
 		revoked: Token API byl zneplatněn.
 
+
+menu:
+    clients: 'API klienti'

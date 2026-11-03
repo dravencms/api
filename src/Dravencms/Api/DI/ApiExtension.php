@@ -37,6 +37,9 @@ final class ApiExtension extends CompilerExtension
             $extension->setConfig($config);
         }
         $builder = $this->getContainerBuilder();
+        if ($this->compiler->getExtensions(\Dravencms\Admin\DI\AdminExtension::class) !== []) {
+            $builder->addDefinition($this->prefix('adminMenuProvider'))->setFactory(\Dravencms\Api\AdminMenuProvider::class);
+        }
         foreach ([ScopeRegistry::class, TokenAuthenticator::class, ClientManager::class, OpenApiController::class, ApiPresenter::class, DocumentationPresenter::class] as $class) {
             $builder->addDefinition($this->prefix(str_replace('\\', '.', $class)))->setFactory($class);
         }

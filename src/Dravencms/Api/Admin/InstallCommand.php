@@ -3,7 +3,6 @@
 namespace Dravencms\Api\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Dravencms\Model\Admin\Entities\Menu;
 use Dravencms\Model\User\Entities\{AclOperation, AclResource, Group};
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\{InputInterface, InputOption};
@@ -18,7 +17,7 @@ final class InstallCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Add API management permission and menu to an existing installation')
+        $this->setDescription('Add API management permission to an existing installation')
             ->addOption('group', null, InputOption::VALUE_REQUIRED, 'Administrator group to grant API management to', 'Administrator');
     }
 
@@ -42,11 +41,8 @@ final class InstallCommand extends Command
                 $manager->persist($operation);
             }
             $operation->addGroup($group);
-            if (!$manager->getRepository(Menu::class)->findOneBy(['presenter' => ':Admin:Api:Client'])) {
-                $manager->persist(new Menu('API clients', ':Admin:Api:Client', 'fa-key', $operation));
-            }
         });
-        $output->writeln('API management permission and menu installed.');
+        $output->writeln('API management permission installed.');
         return Command::SUCCESS;
     }
 }

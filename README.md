@@ -53,7 +53,7 @@ The command leaves existing tables and records untouched. It creates the initial
 API schema; later schema changes should be handled through application migrations.
 It does not run fixtures or update the rest of the database schema.
 
-For the optional admin interface, add the management permission and menu:
+For the optional admin interface, add the management permission (the menu is supplied automatically by its provider):
 
 ```sh
 php bin/console api:admin:install
