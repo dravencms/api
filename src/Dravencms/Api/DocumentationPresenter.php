@@ -45,27 +45,16 @@ final class DocumentationPresenter implements IPresenter
     {
         $bundled = dirname((new \ReflectionClass(SwaggerPanel::class))->getFileName()) . '/templates/assets/';
         $assets = [
-            'swagger-ui.css' => [$bundled . 'swagger-ui.css', 'text/css'],
-            'swagger-ui-bundle.js' => [$bundled . 'swagger-ui-bundle.js', 'application/javascript'],
-            'swagger-init.js' => [__DIR__ . '/Documentation/swagger-init.js', 'application/javascript'],
-            'documentation.css' => [__DIR__ . '/Documentation/documentation.css', 'text/css'],
+            'swagger-ui-css' => [$bundled . 'swagger-ui.css', 'text/css'],
+            'swagger-ui-bundle-js' => [$bundled . 'swagger-ui-bundle.js', 'application/javascript'],
+            'swagger-init-js' => [__DIR__ . '/Documentation/swagger-init.js', 'application/javascript'],
+            'documentation-css' => [__DIR__ . '/Documentation/documentation.css', 'text/css'],
         ];
-        // Extensionless URLs reach the front controller even when nginx serves .js/.css directly.
-        // Continue accepting the original filenames for existing documentation links.
-        if (is_string($name)) {
-            $aliases = [
-                'swagger-ui-css' => 'swagger-ui.css',
-                'swagger-ui-bundle-js' => 'swagger-ui-bundle.js',
-                'swagger-init-js' => 'swagger-init.js',
-                'documentation-css' => 'documentation.css',
-            ];
-            $name = $aliases[$name] ?? $name;
-        }
         if (!is_string($name) || !isset($assets[$name])) {
             throw new BadRequestException();
         }
         $this->httpResponse->setHeader('Cache-Control', 'public, max-age=3600');
-        if ($name === 'swagger-ui.css') {
+        if ($name === 'swagger-ui-css') {
             $this->httpResponse->setContentType('text/css', 'utf-8');
             // Contributte scopes its bundled stylesheet to the Tracy panel host.
             return new TextResponse(str_replace('#tracy-debug ', '', file_get_contents($assets[$name][0])));
