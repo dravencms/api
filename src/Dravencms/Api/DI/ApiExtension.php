@@ -6,7 +6,6 @@ use Apitte\Core\DI\ApiExtension as ApitteExtension;
 use Apitte\Presenter\ApiPresenter;
 use Dravencms\AdminModule\ApiModule\ClientPresenter;
 use Dravencms\AdminModule\ApiModule\TokenPresenter;
-use Dravencms\Api\Admin\InstallCommand;
 use Dravencms\Api\Console\ManageCommand;
 use Dravencms\Api\Console\SetupCommand;
 use Dravencms\Api\Controllers\OpenApiController;
@@ -62,8 +61,6 @@ final class ApiExtension extends CompilerExtension
         if ($this->compiler->getExtensions(\Dravencms\Admin\DI\AdminExtension::class) !== []) {
             $builder->addDefinition($this->prefix('admin.clientPresenter'))->setFactory(ClientPresenter::class);
             $builder->addDefinition($this->prefix('admin.tokenPresenter'))->setFactory(TokenPresenter::class);
-            $builder->addDefinition($this->prefix('admin.installCommand'))->setFactory(InstallCommand::class)->setAutowired(false)
-                ->addTag('console.command', 'api:admin:install');
         }
     }
 

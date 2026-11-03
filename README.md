@@ -53,15 +53,10 @@ The command leaves existing tables and records untouched. It creates the initial
 API schema; later schema changes should be handled through application migrations.
 It does not run fixtures or update the rest of the database schema.
 
-For the optional admin interface, add the management permission (the menu is supplied automatically by its provider):
-
-```sh
-php bin/console api:admin:install
-```
-
-This command reuses existing records on subsequent runs. It grants
-`api:clientsEdit` to the `Administrator` group; use `--group=NAME` for a different
-group. API clients are managed at `/admin/api.client`, using the existing admin
+For the optional admin interface, assign `api.clientsEdit` through the group
+permission editor. Its definition and menu are supplied automatically by providers;
+no API-specific permission installation or seeding command is needed.
+API clients are managed at `/admin/api.client`, using the existing admin
 login and ACL system. The key action in each client row opens that client's
 token list at `/admin/api.token?clientId=ID`. Token creation and revocation have
 separate form pages; the trash action opens a revocation confirmation.
@@ -211,4 +206,4 @@ and repeatable setup. Verify Swagger UI with the application's generated schema.
 
 The package does not currently include a standalone test suite.
 
-API administration declares `api.clientsEdit` through its ACL provider when the User extension is enabled. The optional `api:admin:install` command assigns that known permission through the grant store; it no longer defines permissions or writes labels to ACL tables. Existing installations upgrading to User 3 must run `user:acl:migrate --apply` before using administration.
+API administration declares `api.clientsEdit` through its ACL provider when the User extension is enabled. Assign this permission through the group permission editor. No API-specific ACL installation command is provided. Existing installations upgrading to User 3 must run `user:acl:migrate --apply` before using administration.
