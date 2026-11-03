@@ -13,7 +13,7 @@
     "ext-json": "*",
     "contributte/apitte": "^0.14",
     "contributte/openapi": "^0.1",
-    "dravencms/application": "^0.1 || ^0.2",
+    "dravencms/application": "^0.3",
     "dravencms/database": "^0.2",
     "nette/caching": "^3.1",
     "symfony/console": "^6.4 || ^7.0 || ^8.0",
@@ -37,7 +37,7 @@
     }
   },
   "conflict": {
-    "dravencms/admin": "<3.0",
-    "dravencms/user": "<3.0"
+    "dravencms/admin": "<3.2",
+    "dravencms/user": "<3.1"
   }
 }

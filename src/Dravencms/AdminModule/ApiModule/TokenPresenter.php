@@ -11,6 +11,7 @@ use Dravencms\Model\Api\Entities\{ApiClient, ApiToken};
 use Dravencms\User\Attributes\IsAllowed;
 use Nette\Application\UI\Form;
 
+#[\Dravencms\User\Attributes\IsAllowed('api', 'clientsEdit')]
 final class TokenPresenter extends SecuredPresenter
 {
     /** @inject */

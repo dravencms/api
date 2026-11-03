@@ -207,3 +207,7 @@ and repeatable setup. Verify Swagger UI with the application's generated schema.
 The package does not currently include a standalone test suite.
 
 API administration declares `api.clientsEdit` through its ACL provider when the User extension is enabled. Assign this permission through the group permission editor. No API-specific ACL installation command is provided. Existing installations upgrading to User 3 must run `user:acl:migrate --apply` before using administration.
+
+## Admin authorization and mutations
+
+Administration uses User 3.1, Admin 3.2 and Application 0.3 guards. Screens and write callbacks enforce the existing provider-defined permissions server-side, including direct URLs and bulk callbacks. Mutating signals require POST and a session-bound action token; synchronize the matching admin assets when upgrading. See the User package's `user:security:migrate` instructions for the password-reset schema change.
