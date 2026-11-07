@@ -15,6 +15,10 @@ final class ScopeRegistry
 
     public function getRequired(Endpoint $endpoint): array
     {
+        $handler = $endpoint->getHandler();
+        if (\Dravencms\Api\Schema\PublicDocumentation::matches($handler->getClass(), $handler->getMethod())) {
+            return [];
+        }
         $scopes = $endpoint->getTag(RequiresScopes::TAG);
         if (!is_string($scopes) || $scopes === '') {
             throw new \LogicException('API endpoint has no required scopes.');

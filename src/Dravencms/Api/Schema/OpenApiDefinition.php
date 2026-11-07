@@ -11,6 +11,12 @@ final class OpenApiDefinition extends CoreDefinition
     protected function createOperation(Endpoint $endpoint): array
     {
         $operation = parent::createOperation($endpoint);
+        $handler = $endpoint->getHandler();
+        if (PublicDocumentation::matches($handler->getClass(), $handler->getMethod())) {
+            $operation['security'] = [];
+            unset($operation['tags']);
+            return $operation;
+        }
         $operation['security'] = [['BearerAuth' => []]];
         $operation['description'] = trim(($operation['description'] ?? '') . "\n\nRequired scopes: " . $endpoint->getTag(RequiresScopes::TAG));
         foreach ([400 => 'Invalid query parameters', 401 => 'Invalid or missing bearer token',

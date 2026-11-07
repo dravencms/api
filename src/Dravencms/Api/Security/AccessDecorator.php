@@ -27,10 +27,14 @@ final class AccessDecorator implements IRequestDecorator
         if (!in_array($request->getMethod(), ['GET', 'HEAD'], true)) {
             throw new ClientErrorException('This API is read-only.', 405);
         }
+        $required = $this->scopes->getRequired($endpoint);
+        if ($required === []) {
+            return $request;
+        }
         $token = $this->authenticator->authenticate($request->getHeaderLine('Authorization'));
         $client = $token->getClient();
         $limit = $this->limiter->consume($client);
-        if (array_diff($this->scopes->getRequired($endpoint), $client->getScopes()) !== []) {
+        if (array_diff($required, $client->getScopes()) !== []) {
             throw new ClientErrorException('API client lacks the required scope.', 403);
         }
         return $request->withAttribute('dravencms.api.client', $client)

@@ -19,10 +19,13 @@ final class ReadOnlyValidation implements IValidation
                 $name = $controller->getClass() . '::' . $method->getName();
                 $tags = array_merge($controller->getTags(), $method->getTags());
                 $scopes = $tags[RequiresScopes::TAG] ?? '';
-                if (!is_string($scopes) || $scopes === '') {
+                $public = PublicDocumentation::matches($controller->getClass(), $method->getName());
+                if (!$public && (!is_string($scopes) || $scopes === '')) {
                     throw new InvalidSchemaException($name . ' must declare RequiresScopes.');
                 }
-                new RequiresScopes(...explode(' ', $scopes));
+                if (!$public) {
+                    new RequiresScopes(...explode(' ', $scopes));
+                }
                 if ($method->getHttpMethods() === [] || array_diff($method->getHttpMethods(), ['GET', 'HEAD']) !== []) {
                     throw new InvalidSchemaException($name . ' must only allow GET or HEAD.');
                 }

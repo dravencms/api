@@ -5,80 +5,11 @@ body {
     font-family: Arial, sans-serif;
 }
 
-[hidden] {
-    display: none !important;
-}
-
-#documentation-access {
-    max-width: 720px;
-    margin: 64px auto;
-    padding: 0 24px;
-}
-
-#documentation-access h1 {
-    margin: 0 0 32px;
-    font-size: 28px;
-}
-
-#documentation-auth label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.authorization-controls {
-    display: flex;
-    gap: 12px;
-}
-
-.authorization-controls input,
-.authorization-controls button {
-    box-sizing: border-box;
-    min-height: 44px;
-    border-radius: 4px;
-    font: inherit;
-}
-
-.authorization-controls input {
-    flex: 1;
-    min-width: 0;
-    padding: 10px 12px;
-    border: 1px solid #9ca3aa;
-    background: white;
-}
-
-.authorization-controls button {
-    padding: 10px 20px;
-    border: 1px solid #27723f;
-    background: #27723f;
-    color: white;
-    cursor: pointer;
-}
-
-.authorization-controls button:disabled {
-    opacity: 0.65;
-    cursor: wait;
-}
-
-#documentation-error {
-    color: #ad2530;
-    font-size: 14px;
-}
-
 .swagger-ui code {
     overflow-wrap: anywhere;
 }
 
 @media (max-width: 540px) {
-    #documentation-access {
-        margin-top: 32px;
-    }
-
-    .authorization-controls {
-        flex-direction: column;
-    }
-
     .swagger-ui .opblock .opblock-summary {
         flex-wrap: wrap;
     }

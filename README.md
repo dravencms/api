@@ -74,7 +74,6 @@ replace them with resources provided by your installed packages.
 php bin/console api:scopes
 php bin/console api:client:create "Partner integration" \
     --scope=article.articles:read \
-    --scope=api.documentation:read \
     --limit=60
 php bin/console api:token:create 1 "Production" \
     --expires=2027-01-01T00:00:00+00:00
@@ -103,7 +102,8 @@ php bin/console api:token:revoke 1
 ## Resource Conventions
 
 - Only GET and HEAD endpoints are accepted. DI compilation rejects write methods
-  and endpoints without explicit required scopes.
+  and resource endpoints without explicit required scopes. The built-in OpenAPI
+  specification is the sole public endpoint.
 - Every required scope must be granted to the client. There are no implied scope
   hierarchies or wildcard grants.
 - Scopes come from controller metadata, with client grants stored as strings.
@@ -121,15 +121,15 @@ php bin/console api:token:revoke 1
   401, insufficient scopes 403, disallowed methods 405, and exhausted limits 429.
 - Authenticated responses use `Cache-Control: private, no-store`.
 
-GET `/api/v1/openapi` returns the generated OpenAPI specification and requires
-`api.documentation:read`. Response schemas are derived from DTO properties;
-endpoint parameters and required scopes come from controller metadata.
+GET `/api/v1/openapi` returns the public OpenAPI specification without a token.
+Response schemas are derived from DTO properties; endpoint parameters and required
+scopes come from controller metadata. Documentation requests do not consume client
+rate limits. Existing `api.documentation:read` grants are obsolete and can be removed;
+no database migration is required.
 
-Open `/api/docs` for Swagger UI, also linked from the admin client list. Enter a
-bearer token with `api.documentation:read` to load the protected specification.
-Swagger's Authorize button then manages credentials for GET/HEAD "Try it out"
-requests, which still require the individual resource scopes. The initial HTML
-shell is public; it does not embed the specification or credentials.
+Open `/api/docs` for Swagger UI, also linked from the admin client list. Documentation
+loads immediately. Use Swagger's Authorize button to supply a bearer token for
+GET/HEAD "Try it out" requests, which still require the individual resource scopes.
 
 The page serves the Swagger UI assets bundled with `contributte/openapi` from
 the same application. It does not use a CDN or external specification validator,
